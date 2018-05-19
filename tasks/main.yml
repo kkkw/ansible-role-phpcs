@@ -1,6 +1,8 @@
 ---
 # tasks file for ansible-role-phpcs
 - name: get composer bin path
+  become: yes
+  become_user: "{{ phpcs_user }}"
   command: composer global config bin-dir --absolute
   register: phpcs_composer_bin_path
   check_mode: no
