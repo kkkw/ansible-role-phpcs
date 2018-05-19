@@ -7,6 +7,8 @@
   changed_when: False
 
 - name: install with composer
+  become: yes
+  become_user: "{{ phpcs_user }}"
   command: >
     composer global require "squizlabs/php_codesniffer=@stable"
     creates={{ phpcs_composer_bin_path.stdout }}/phpcs
@@ -23,5 +25,7 @@
 #    phpcs_config_dict: "{{ phpcs_config.stdout | from_yaml }}"
 
 - name: setting configs
+  become: yes
+  become_user: "{{ phpcs_user }}"
   command: "{{ phpcs_composer_bin_path.stdout }}/phpcs --config-set {{ item }}"
   with_items: "{{ phpcs_config_set }}"
