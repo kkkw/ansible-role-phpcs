@@ -3,7 +3,7 @@
 - name: get composer bin path
   command: composer global config bin-dir --absolute
   register: phpcs_composer_bin_path
-  always_run: True
+  check_mode: no
   changed_when: False
 
 - name: install with composer
@@ -11,24 +11,17 @@
     composer global require "squizlabs/php_codesniffer=@stable"
     creates={{ phpcs_composer_bin_path.stdout }}/phpcs
 
-- name: check phpcs config
-  command: "{{ phpcs_composer_bin_path.stdout }}/phpcs --config-show"
-  register: phpcs_config
-  ignore_errors: True
-  changed_when: False
+# this block is no longer needed
+#- name: check phpcs config
+#  command: "{{ phpcs_composer_bin_path.stdout }}/phpcs --config-show"
+#  register: phpcs_config
+#  ignore_errors: True
+#  changed_when: False
 
-- name: modify phpcs_config
-  set_fact:
-    phpcs_config_dict: "{{ phpcs_config.stdout | from_yaml }}"
+#- name: modify phpcs_config
+#  set_fact:
+#    phpcs_config_dict: "{{ phpcs_config.stdout | from_yaml }}"
 
-- name: set encoding to utf8 if not set
-  command: "{{ phpcs_composer_bin_path.stdout }}/phpcs --config-set encoding utf-8"
-  when: phpcs_config_dict.encoding is not defined
-
-- name: set colors to true if not set
-  command: "{{ phpcs_composer_bin_path.stdout }}/phpcs --config-set colors 1"
-  when: phpcs_config_dict.colors is not defined
-
-- name: set report_width if not set
-  command: "{{ phpcs_composer_bin_path.stdout }}/phpcs --config-set report_width {{ phpcs_report_width }}"
-  when: phpcs_config_dict.report_width is not defined
+- name: setting configs
+  command: "{{ phpcs_composer_bin_path.stdout }}/phpcs --config-set {{ item }}"
+  with_items: "{{ phpcs_config_set }}"
