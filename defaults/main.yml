@@ -3,3 +3,5 @@ phpcs_config_set:
   - 'encoding utf-8'
   - 'colors 1'
   - 'report_width 120'
+phpcs_user: root
+
