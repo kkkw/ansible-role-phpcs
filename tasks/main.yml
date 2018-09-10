@@ -13,17 +13,6 @@
     composer global require "squizlabs/php_codesniffer=@stable"
     creates={{ phpcs_composer_bin_path.stdout }}/phpcs
 
-# this block is no longer needed
-#- name: check phpcs config
-#  command: "{{ phpcs_composer_bin_path.stdout }}/phpcs --config-show"
-#  register: phpcs_config
-#  ignore_errors: True
-#  changed_when: False
-
-#- name: modify phpcs_config
-#  set_fact:
-#    phpcs_config_dict: "{{ phpcs_config.stdout | from_yaml }}"
-
 - name: setting configs
   become: yes
   become_user: "{{ phpcs_user }}"
